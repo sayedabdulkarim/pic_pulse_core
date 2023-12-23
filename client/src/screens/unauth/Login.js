@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthInfoIcon } from "../../utils/svgs";
 import { useDispatch } from "react-redux";
 import { useLoginMutation } from "../../apiSlices/userApiSlice";
 import { setCredentials } from "../../slices/authSlice";
 import { handleShowAlert } from "../../utils/commonHelper";
+import AppContext from "../../context";
 
 const Login = () => {
+  const {
+    state: { user },
+    clearAll,
+  } = useContext(AppContext);
   //misc
   const dispatch = useDispatch();
   //state
@@ -54,7 +59,7 @@ const Login = () => {
     <div className="form_container">
       {/*  */}
       <div className="title_container">
-        <div className="info_text">
+        <div className="info_text" onClick={() => console.log(user, " usss")}>
           Enter a mobile number or restaurant ID to continue
         </div>
         <div className="info_icon">
