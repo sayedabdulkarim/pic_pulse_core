@@ -43,9 +43,7 @@ router.post("/signup", async (req, res) => {
   try {
     // Check if the user already exists
     const savedUser = await User.findOne({ email });
-    // if (savedUser) {
-    //   return res.status(422).json({ message: "User already registered" });
-    // }
+
     if (savedUser) {
       res.status(400).json({
         message: "User with this phone number already exists. Please Login.",
