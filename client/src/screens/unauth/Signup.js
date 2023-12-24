@@ -34,51 +34,6 @@ export default function Signup(props) {
     setFileName(files[0].name);
   };
 
-  const handleSu = (e) => {
-    e.preventDefault();
-    // console.log(data, ' ddd')
-    setData({
-      name: "",
-      email: "",
-      password: "",
-    });
-
-    const { name, email, password } = data;
-    const formBody = { name, email, password, pic: base64 };
-    const resetFormBody = { name: "", email: "", password: "" };
-
-    // console.log(formBody, ' fff')
-    // setBase64('')
-    // setFileName('')
-    axios
-      .post("http://localhost:5000/signup", formBody)
-      .then((res) => {
-        if (res.status === 200) {
-          // M.toast({
-          //   html: res.data.message,
-          //   classes: "#43a047 green darken-1",
-          // });
-          // setTimeout(history.push("/signin"), 3000);
-          setData(resetFormBody);
-          setBase64("");
-          setFileName("");
-        }
-        // console.log(res, ' ress')
-        // console.log(res.data.decode.user, ' user')
-        // userData(res.data.decode.user)
-        // localStorage.setItem('jwt', res.data.token)
-        // localStorage.setItem('user', JSON.stringify(res.data.decode.user))
-      })
-      .catch((err) => {
-        if (err) {
-          // M.toast({
-          //   html: err.response.data.error,
-          //   classes: "#c62828 red darken",
-          // }),
-          setData(resetFormBody);
-        }
-      });
-  };
   //async
   useEffect((_) => {
     const token = localStorage.getItem("jwt");
@@ -106,17 +61,18 @@ export default function Signup(props) {
         };
         // console.log(formBody, ' fff')
         axios
-          .post("http://localhost:5000/signup", formBody)
+          .post("http://localhost:8080/signup", formBody)
           .then((res) => {
-            if (res.status == 200) {
+            if (res.status === 200) {
+              console.log(res, " resss");
               // M.toast({
               //   html: res.data.message,
               //   classes: "#43a047 green darken-1",
               // });
               // setTimeout(history.push("/signin"), 3000);
-              resetForm();
-              setBase64("");
-              setFileName("");
+              // resetForm();
+              // setBase64("");
+              // setFileName("");
             }
           })
           .catch((err) => {
@@ -125,7 +81,8 @@ export default function Signup(props) {
               //   html: err.response.data.error,
               //   classes: "#c62828 red darken",
               // }),
-              resetForm();
+              console.log(err, " errr");
+              // resetForm();
             }
           });
         // resetForm()
