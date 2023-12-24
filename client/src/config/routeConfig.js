@@ -13,7 +13,6 @@ import HomeScreen from "../screens/auth/Home";
 import AddRestaurantScreen from "../screens/auth/AddRestaurant";
 import AddMenuScreen from "../screens/auth/AddMenu";
 //unauth
-import UnAuthScreen from "../screens/unauth";
 import LoginScreen from "../screens/unauth/Login";
 import SignupScreen from "../screens/unauth/Signup";
 
