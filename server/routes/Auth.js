@@ -11,6 +11,7 @@ const User = require("../modals/userSchema");
 //mail
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
+const { generateToken } = require("../utils/generateToken");
 
 const transport = nodemailer.createTransport(
   sendgridTransport({
@@ -39,6 +40,7 @@ router.post("/signup", (req, res) => {
       error: "Please add all the fields",
     });
   }
+
   //find same email
   User.findOne({ email }).then((savedUser) => {
     if (savedUser) {
@@ -57,11 +59,18 @@ router.post("/signup", (req, res) => {
           password: hashedPassword,
           pic,
         });
+        // Generate JWT token
+        const token = generateToken(newUser._id);
         newUser
           .save()
           .then((user) => {
-            res.status(200).json({
-              message: "User saved succesfully.",
+            res.status(201).json({
+              message: "User registered successfully.",
+              user: {
+                name,
+                email,
+              },
+              token, // Include the token in the response
             });
           })
           .catch((err) => console.log(err, " error"));
