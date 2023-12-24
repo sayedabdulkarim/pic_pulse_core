@@ -14,13 +14,16 @@ import AddRestaurantScreen from "../screens/auth/AddRestaurant";
 import AddMenuScreen from "../screens/auth/AddMenu";
 //unauth
 import UnAuthScreen from "../screens/unauth";
+import LoginScreen from "../screens/unauth/Login";
+import SignupScreen from "../screens/unauth/Signup";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       {/* public routes */}
       <Route element={<PublicRoute />}>
-        <Route path="/auth" element={<UnAuthScreen />} />
+        <Route path="/login" element={<LoginScreen />} />
+        <Route path="/signup" element={<SignupScreen />} />
       </Route>
       {/* private routes */}
       <Route path="" element={<PrivateRoute />}>

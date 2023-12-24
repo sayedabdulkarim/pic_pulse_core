@@ -81,7 +81,7 @@ const Login = (props) => {
         setFieldValue,
       }) => {
         return (
-          <div>
+          <div className="unauth_container">
             {/* <button onClick={() => console.log(state, ' sss')}>USER</button> */}
             <div
               className="card mx-auto"

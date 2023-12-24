@@ -13,7 +13,7 @@ const PrivateRoute = () => {
       {/* <Footer /> */}
     </div>
   ) : (
-    <Navigate to={"/auth"} replace />
+    <Navigate to={"/login"} replace />
   );
 };
 
