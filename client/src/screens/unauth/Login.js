@@ -1,116 +1,168 @@
-import React, { useContext, useState } from "react";
-import { AuthInfoIcon } from "../../utils/svgs";
-import { useDispatch } from "react-redux";
-import { useLoginMutation } from "../../apiSlices/userApiSlice";
-import { setCredentials } from "../../slices/authSlice";
-import { handleShowAlert } from "../../utils/commonHelper";
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+// import M from "materialize-css";
+
+import { Formik, Form } from "formik";
+import { Link } from "react-router-dom";
+
+import Input from "../../components/input";
+import ButtonContained from "../../components/button";
+import { loginSchema } from "../../validation/validationSchema";
 import AppContext from "../../context";
 
-const Login = () => {
-  const {
-    state: { user },
-    clearAll,
-  } = useContext(AppContext);
-  //misc
-  const dispatch = useDispatch();
-  //state
-  const [formData, setFormData] = useState({
-    email_number: "",
-    password: "",
-  });
+// import AppContext from '../../../store/context/context'
+//auth
+// import { fakeAuth } from '../../../components/protected'
 
-  //queries n mutation
-  const [loginUser, { isLoading: loginLoading, error: loginError }] =
-    useLoginMutation();
+const Login = (props) => {
+  // const history = useHistory();
+  const { state, userData } = useContext(AppContext);
 
-  //func
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // console.log(formData, " formmm");
-    const { email_number, password } = formData;
-
-    try {
-      const res = await loginUser({
-        email_number,
-        password,
-      }).unwrap();
-      console.log(res, " resss");
-      localStorage.setItem("jwtToken", res.token);
-      handleShowAlert(dispatch, "success", res?.message);
-      dispatch(setCredentials({ ...res }));
-      // navigate("/");
-    } catch (err) {
-      handleShowAlert(dispatch, "error", err?.data?.message);
-      console.log(err, " errr");
-    }
-  };
-
-  const { email_number, password } = formData;
-  const isEnable = email_number && password;
+  //async
+  useEffect((_) => {
+    const token = localStorage.getItem("jwt");
+    // if(localStorage.getItem("jwt") && localStorage.getItem("jwt").length){
+    // if(token && token.length){
+    //     fakeAuth.authenticate()
+    //     props.history.push('/')
+    // }
+  }, []);
 
   return (
-    <div className="form_container">
-      {/*  */}
-      <div className="title_container">
-        <div className="info_text" onClick={() => console.log(user, " usss")}>
-          Enter a mobile number or restaurant ID to continue
-        </div>
-        <div className="info_icon">
-          <AuthInfoIcon />
-        </div>
-      </div>
-      {/*  */}
-      <form onSubmit={handleSubmit}>
-        {/* input */}
-        <div className=" input_item">
-          <input
-            name="email_number"
-            placeholder="Enter Email ID / Mobile number"
-            autoCapitalize="sentences"
-            autoComplete="on"
-            autoCorrect="on"
-            inputMode="decimal"
-            spellCheck="true"
-            className=""
-            type="text"
-            value={formData?.email_number}
-            onChange={handleChange}
-          />
-        </div>
-        {/*  */}
-        <div className=" input_item">
-          <input
-            name="password"
-            type="password"
-            placeholder="Enter Password"
-            autoCapitalize="sentences"
-            autoComplete="on"
-            autoCorrect="on"
-            inputMode="decimal"
-            spellCheck="true"
-            className=""
-            value={formData?.password}
-            onChange={handleChange}
-          />
-        </div>
-        {/* button */}
-        <button
-          className={`submit_button ${isEnable ? "isActive" : ""}`}
-          type="submit"
-        >
-          <div className="btn_text">Continue</div>
-        </button>
-        {/*  */}
-      </form>
-    </div>
+    <Formik
+      validationSchema={loginSchema}
+      initialValues={{
+        email: "",
+        password: "",
+      }}
+      onSubmit={(values, { resetForm }) => {
+        const formBody = {
+          email: values.email,
+          password: values.password,
+        };
+        // console.log(formBody, ' fff')
+        axios
+          .post("http://localhost:5000/signin", formBody)
+          .then((res) => {
+            if (res.status === 200) {
+              // console.log(res, ' ress')
+              userData(res.data.user);
+              // fakeAuth.authenticate()
+              localStorage.setItem("jwt", res.data.token);
+              localStorage.setItem("user", JSON.stringify(res.data.user));
+              // fakeAuth.authenticate()
+              // M.toast({
+              //   html: res.data.message,
+              //   classes: "#43a047 green darken-1",
+              // });
+              // history.push("/");
+            }
+          })
+          //  .catch(err => console.log(err.response, ' err'))
+          .catch(
+            (err) => err && "errror"
+            // M.toast({
+            //   html: err.response.data.error,
+            //   classes: "#c62828 red darken",
+            // })
+          );
+        // resetForm()
+      }}
+    >
+      {({
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        values,
+        touched,
+        isValid,
+        errors,
+        isSubmitting,
+        setFieldValue,
+      }) => {
+        return (
+          <div>
+            {/* <button onClick={() => console.log(state, ' sss')}>USER</button> */}
+            <div
+              className="card mx-auto"
+              style={{ width: "60%", margin: "20px auto", padding: "20px" }}
+            >
+              <h2
+                style={{ fontFamily: `Grand Hotel, cursive` }}
+                className="center"
+              >
+                SIGN IN
+              </h2>
+
+              {/* form */}
+              <div
+                className="row mx-auto col-sm-12"
+                style={{ border: "", width: "80%" }}
+              >
+                <Form className="col-sm-12 col-md-12" onSubmit={handleSubmit}>
+                  <div className="form-row">
+                    <label
+                      style={{ top: "26px" }}
+                      className="col-sm-3 col-form-label"
+                    >
+                      <b>Email : </b>
+                    </label>
+                    <div className="form-group col-md-7">
+                      <Input
+                        id="email"
+                        name="email"
+                        placeholder="Email"
+                        type="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        error={touched.email && errors.email}
+                        errorText={errors.email}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <label
+                      style={{ top: "26px" }}
+                      className="col-sm-3 col-form-label"
+                    >
+                      <b>Password : </b>
+                    </label>
+                    <div className="form-group col-md-7">
+                      <Input
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        type="text"
+                        value={values.password}
+                        onChange={handleChange}
+                        error={touched.password && errors.password}
+                        errorText={errors.password}
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+
+                  <ButtonContained
+                    buttonName="Sign In"
+                    disabled={isSubmitting}
+                  />
+                </Form>
+              </div>
+
+              <Link
+                to="/signup"
+                className="center"
+                style={{ display: "block", color: "#FF3F6C" }}
+              >
+                New user ? Please signUp
+              </Link>
+            </div>
+          </div>
+        );
+      }}
+    </Formik>
   );
 };
-
 export default Login;

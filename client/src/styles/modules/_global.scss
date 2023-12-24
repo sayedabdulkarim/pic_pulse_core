@@ -1,0 +1,118 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body{
+    background-color: rgb(250, 250, 250);
+  }
+  /* label underline focus color */
+  .input-field input[type=text]:focus {
+    border-bottom: 1px solid #F13AB1!important;
+    box-shadow: 0 1px 0 0 #F13AB1!important;
+  }
+  .input-field input[type=email]:focus {
+    border-bottom: 1px solid #F13AB1!important;
+    box-shadow: 0 1px 0 0 #F13AB1!important;
+  }
+  .input-field input[type=password]:focus {
+    border-bottom: 1px solid #F13AB1!important;
+    box-shadow: 0 1px 0 0 #F13AB1!important;
+  }
+  //focus-label
+  .input-field label {
+    color: #F13AB1!important;
+  }
+  /* label focus color */
+  .input-field input[type=text]:focus + label {
+    color: #F13AB1!important;
+  }
+  
+  /* icon prefix focus color */
+  // .input-field .prefix.active {
+  //   color: #000;
+  // }
+  
+  // old-style //
+  a{
+    /* color: black; */
+   /* color: white!important; */
+   text-decoration: none!important;
+  }
+  .nav-wrapper ul li a{
+   color: black;
+  }
+  .mycard{
+   margin-top: 30px;
+  }
+  .auth-card{
+   padding: 20px;
+   text-align: center;
+   max-width: 400px;
+   margin: 10px auto;
+  }
+  
+  .gallery{
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-around;
+  }
+  
+  .item{
+   width: 30%;
+   margin: 20px 0;
+   /* border: 1px sol; */
+  }
+  
+  /* home */
+  .home-card{
+    // border: 1px solid green;
+   max-width: 750px;
+   height: max-content;
+  //  margin: 25px auto;
+   padding: 10px;
+  }
+  
+  .Loading{
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+  }
+  
+  .homeImage img{
+   height: 400px;
+  //  width: 70%!important;
+   margin: 0 auto;
+  }
+  
+  /* //toast */
+  #toast-container{
+   top: 60px;
+   left: auto;
+   right: 20px;
+  }
+  /* ///////////////// */
+  /* loasder */
+  .circle-clipper .circle{
+   border-color: white!important;
+  }
+  
+  /* loader btn*/
+  .loaderBtn {
+   height: 50px!important;
+   line-height: 0px!important;
+  }
+  
+  @media(max-width: '768px'){
+    .homeImage img{
+      height: 300px;
+     }
+  }
+  
+  //home logo
+  // .brand-logo{
+  //   border: none;
+  // }
+  

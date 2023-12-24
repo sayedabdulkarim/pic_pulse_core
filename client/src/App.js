@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useMessage } from "./hooks/useAlert.js";
 import ContextProvider from "./context/contextProvider.js";
+import HeaderComponent from "./components/Header";
 
 const App = () => {
   const { showMessage } = useMessage();
@@ -23,6 +24,7 @@ const App = () => {
   return (
     <div className="main_wrapper">
       <ContextProvider>
+        <HeaderComponent />
         <Outlet />
       </ContextProvider>
     </div>
