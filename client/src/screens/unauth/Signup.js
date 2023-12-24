@@ -1,24 +1,24 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
-//
-
-// import M from "materialize-css";
 import FileBase64 from "react-file-base64";
 import { signupSchema } from "../../validation/validationSchema";
 import Input from "../../components/input";
 import ButtonContained from "../../components/button";
+import { handleShowAlert } from "../../utils/commonHelper";
+import AppContext from "../../context";
+import { setCredentials } from "../../slices/authSlice";
 //auth
 // import { fakeAuth } from "../../../components/protected";
 // import AppContext from '../../store/context/context'
 
 export default function Signup(props) {
-  // const { state, userData } = useContext(AppContext)
+  //misc
+  const dispatch = useDispatch();
+  const { state, userData } = useContext(AppContext);
 
-  // console.log(state, ' sttaaaa')
-
-  // const history = useHistory();
   //image
   const [fileName, setFileName] = useState("");
   const [base64, setBase64] = useState("");
@@ -59,28 +59,22 @@ export default function Signup(props) {
           password: values.password,
           pic: base64,
         };
-        // console.log(formBody, ' fff')
         axios
           .post("http://localhost:8080/signup", formBody)
           .then((res) => {
-            if (res.status === 200) {
+            if (res.status === 201) {
               console.log(res, " resss");
-              // M.toast({
-              //   html: res.data.message,
-              //   classes: "#43a047 green darken-1",
-              // });
-              // setTimeout(history.push("/signin"), 3000);
-              // resetForm();
-              // setBase64("");
-              // setFileName("");
+              userData(res.data.user);
+              localStorage.setItem("jwtToken", res?.data?.token);
+              resetForm();
+              setBase64("");
+              setFileName("");
+              dispatch(setCredentials({ ...res }));
             }
           })
           .catch((err) => {
             if (err) {
-              // M.toast({
-              //   html: err.response.data.error,
-              //   classes: "#c62828 red darken",
-              // }),
+              handleShowAlert(dispatch, "error", err?.response?.data?.message);
               console.log(err, " errr");
               // resetForm();
             }
@@ -109,6 +103,7 @@ export default function Signup(props) {
               <h2
                 style={{ fontFamily: `Grand Hotel, cursive` }}
                 className="center"
+                onClick={() => console.log(state, " state from context")}
               >
                 SIGN UP
               </h2>

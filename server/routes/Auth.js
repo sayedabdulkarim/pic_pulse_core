@@ -31,53 +31,60 @@ router.get("/protected", requireLogin, (req, res) => {
   res.send("Hello world from protected routes.");
 });
 
-//post signup
-router.post("/signup", (req, res) => {
+// POST signup
+router.post("/signup", async (req, res) => {
   const { name, email, password, pic } = req.body;
-  //check whether all fields are present
+
+  // Check whether all fields are present
   if (!name || !email || !password) {
-    return res.status(422).json({
-      error: "Please add all the fields",
-    });
+    return res.status(422).json({ error: "Please add all the fields" });
   }
 
-  //find same email
-  User.findOne({ email }).then((savedUser) => {
+  try {
+    // Check if the user already exists
+    const savedUser = await User.findOne({ email });
+    // if (savedUser) {
+    //   return res.status(422).json({ message: "User already registered" });
+    // }
     if (savedUser) {
-      return res.status(422).json({
-        error: "User is already registered.",
+      res.status(400).json({
+        message: "User with this phone number already exists. Please Login.",
       });
+      return;
     }
-    //hashed password
-    bcrypt
-      .hash(password, 12)
-      .then((hashedPassword) => {
-        //save user
-        const newUser = new User({
-          name,
-          email,
-          password: hashedPassword,
-          pic,
-        });
-        // Generate JWT token
-        const token = generateToken(newUser._id);
-        newUser
-          .save()
-          .then((user) => {
-            res.status(201).json({
-              message: "User registered successfully.",
-              user: {
-                name,
-                email,
-              },
-              token, // Include the token in the response
-            });
-          })
-          .catch((err) => console.log(err, " error"));
-      })
-      .catch((err) => console.log(err, " outer err"));
-  });
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Save the new user to the database
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      pic,
+    });
+
+    const user = await newUser.save();
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    // Respond with user details and token
+    res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+      token,
+    });
+  } catch (err) {
+    // Log the error and respond with a server error status code
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
+
 //post signin
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
