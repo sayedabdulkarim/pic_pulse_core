@@ -33,8 +33,6 @@ router.get("/protected", requireLogin, (req, res) => {
 //post signup
 router.post("/signup", (req, res) => {
   const { name, email, password, pic } = req.body;
-
-  //   console.log(req.body, " bbbb");
   //check whether all fields are present
   if (!name || !email || !password) {
     return res.status(422).json({
@@ -62,12 +60,6 @@ router.post("/signup", (req, res) => {
         newUser
           .save()
           .then((user) => {
-            // transport.sendMail({
-            //     to:user.email,
-            //     from:"sakarim9124@gmail.com",
-            //     subject:"signup succesfully",
-            //     html:`<p>Welcome to sakarim9124.com.Hello <strong>${ user.name }</strong>, your email-id is <strong>${ user.email }</strong> and password is <strong>${ password }</strong></p>`
-            // })
             res.status(200).json({
               message: "User saved succesfully.",
             });
